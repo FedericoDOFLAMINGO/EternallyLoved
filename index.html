@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Para ti, mi amor</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=IM+Fell+English:ital@0;1&family=Pinyon+Script&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1310;--moor:#2a1d18;--parch:#eadcbd;--parch2:#dcc79c;--wine:#6e1f2c;--moss:#58663f;--gold:#c99d4b;--text:#3a2a20}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:radial-gradient(ellipse at 50% 20%,#4a3326 0%,#241812 55%,#120c09 100%);color:var(--text);font-family:'Cormorant Garamond',Georgia,serif;overflow:hidden;
+ padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 50% 110%,rgba(201,157,75,.18),transparent 55%),repeating-linear-gradient(100deg,rgba(255,255,255,.015) 0 2px,transparent 2px 7px);pointer-events:none}
+#leaves{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:35}
+.stage{height:100%;display:flex;align-items:center;justify-content:center;perspective:1800px;padding:14px}
+.book{position:relative;width:min(92vw,560px);height:min(82vh,760px);transform-style:preserve-3d;transition:transform .25s ease-out}
+.page{position:absolute;inset:0;background:
+ radial-gradient(ellipse at 0 50%,rgba(90,55,25,.28),transparent 22%),
+ radial-gradient(ellipse at 100% 100%,rgba(120,80,40,.22),transparent 40%),
+ linear-gradient(135deg,var(--parch),var(--parch2));
+ border-radius:4px 14px 14px 4px;box-shadow:0 30px 60px rgba(0,0,0,.6),inset 0 0 40px rgba(120,80,40,.25),-8px 0 0 -2px #4a2a1a;
+ padding:clamp(26px,6vw,48px) clamp(24px,6vw,46px) 58px clamp(34px,7vw,56px);display:flex;flex-direction:column;transform-origin:left center;overflow:hidden}
+.page::after{content:"";position:absolute;left:0;top:0;bottom:0;width:22px;background:linear-gradient(90deg,rgba(60,30,10,.35),transparent)}
+.page .inner{flex:1;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;justify-content:center}
+.page .inner::-webkit-scrollbar{display:none}
+.page.out{animation:turnOut .55s ease-in forwards}
+.page.in{animation:turnIn .6s ease-out}
+@keyframes turnOut{to{transform:rotateY(-100deg);opacity:.2;filter:brightness(.7)}}
+@keyframes turnIn{from{transform:rotateY(18deg);opacity:0}to{transform:none;opacity:1}}
+.frame{position:absolute;inset:12px 12px 12px 22px;border:1px solid rgba(110,31,44,.35);border-radius:3px;pointer-events:none}
+.frame::before,.frame::after{content:"❦";position:absolute;color:var(--wine);opacity:.55;font-size:18px;background:transparent}
+.frame::before{top:-12px;right:14px}.frame::after{bottom:-12px;left:14px}
+h2{font-family:'IM Fell English',serif;font-style:italic;font-weight:400;color:var(--wine);font-size:clamp(25px,5.4vw,34px);text-align:center;margin-bottom:6px;line-height:1.15}
+.sub{text-align:center;font-style:italic;color:#7a5a3a;font-size:17px;margin-bottom:18px}
+.orn{text-align:center;color:var(--gold);letter-spacing:.6em;margin:2px 0 16px;font-size:14px}
+p{font-size:clamp(18px,3.9vw,21px);line-height:1.62;text-align:left;margin-bottom:.8em;hyphens:auto}
+p.first::first-letter{font-family:'IM Fell English',serif;float:left;font-size:3.5em;line-height:.8;padding:6px 8px 0 0;color:var(--wine)}
+ul{list-style:none;columns:1}
+li{font-size:clamp(18px,3.9vw,21px);line-height:1.5;padding:3px 0 3px 26px;position:relative;font-style:italic}
+li::before{content:"";position:absolute;left:3px;top:11px;width:12px;height:8px;background:var(--moss);border-radius:0 100% 0 100%;transform:rotate(-25deg)}
+.sign{font-family:'Pinyon Script',cursive;font-size:clamp(32px,8vw,44px);color:var(--wine);text-align:right;margin-top:6px;line-height:1.1}
+.pno{position:absolute;bottom:30px;left:0;right:0;display:flex;justify-content:center;align-items:center;height:20px;z-index:2}
+.dot{width:11px;height:11px;margin:0 5px;border:none;padding:0;background:rgba(110,31,44,.3);border-radius:0 100% 0 100%;transform:rotate(-25deg);cursor:pointer;transition:.3s}
+.dot.on{background:var(--wine);transform:rotate(-25deg) scale(1.5)}
+.nav{position:absolute;bottom:12px;width:44px;height:44px;border:none;background:none;color:var(--wine);font-size:30px;cursor:pointer;font-family:inherit;z-index:3;border-radius:50%}
+.nav:hover{background:rgba(110,31,44,.1)}
+.nav:focus-visible,.btn:focus-visible,#mute:focus-visible{outline:2px solid var(--wine);outline-offset:2px}
+#prev{left:26px}#next{right:20px}
+.nav[disabled]{opacity:.25;cursor:default}
+/* portada */
+.cover{position:absolute;inset:0;border-radius:4px 14px 14px 4px;transform-origin:left center;z-index:4;background:
+ radial-gradient(ellipse at 30% 25%,rgba(255,255,255,.08),transparent 50%),
+ repeating-linear-gradient(45deg,rgba(0,0,0,.08) 0 2px,transparent 2px 5px),linear-gradient(145deg,#7d2635,#4b1019 70%);
+ box-shadow:0 30px 70px rgba(0,0,0,.7),inset 0 0 0 10px rgba(201,157,75,.0),inset 0 0 50px rgba(0,0,0,.55);
+ display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--gold);padding:30px;
+ transition:transform 1.9s cubic-bezier(.6,.05,.2,1),opacity .6s 1.6s;backface-visibility:hidden}
+.cover::before{content:"";position:absolute;inset:16px;border:2px solid var(--gold);border-radius:3px;opacity:.75}
+.cover::after{content:"";position:absolute;inset:24px;border:1px solid var(--gold);opacity:.4}
+.cover .spine{position:absolute;left:0;top:0;bottom:0;width:26px;background:linear-gradient(90deg,#2d0a10,#6a1c29 60%,transparent)}
+.cover h1{font-family:'IM Fell English',serif;font-style:italic;font-weight:400;font-size:clamp(34px,9vw,52px);line-height:1.1;text-shadow:0 2px 0 rgba(0,0,0,.5);margin:12px 0}
+.cover small{font-size:18px;font-style:italic;color:#e3c98f;letter-spacing:.04em}
+.rose{font-size:54px;filter:drop-shadow(0 2px 0 rgba(0,0,0,.5))}
+.btn{margin-top:26px;font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:#2a0d12;background:linear-gradient(#e6c47b,#b98a38);border:none;padding:11px 26px;border-radius:30px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.45);transition:transform .2s}
+.btn:hover{transform:translateY(-2px)}
+.cover.open{transform:rotateY(-168deg);opacity:0;pointer-events:none}
+.cover .btn{position:relative;z-index:2}
+.pagewrap{opacity:0;transition:opacity 1s .9s;position:absolute;inset:0}
+.book.opened .pagewrap{opacity:1}
+.book:not(.opened) .pagewrap{pointer-events:none}
+.photoBtn{align-self:center;margin-top:12px;color:#f6e7c4;background:linear-gradient(#8a2a3a,#5e1722)}
+#mute{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:14px;z-index:20;width:42px;height:42px;border-radius:50%;border:1px solid var(--gold);background:rgba(20,12,9,.7);color:var(--gold);font-size:19px;cursor:pointer;display:none}
+/* modal foto */
+.modal{position:fixed;inset:0;z-index:30;background:rgba(10,6,4,.82);display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.modal.show{display:flex}
+.polaroid{background:#f7efdc;padding:14px 14px 18px;max-width:min(88vw,420px);box-shadow:0 30px 70px rgba(0,0,0,.7);transform:rotate(-2.5deg);animation:pop .9s cubic-bezier(.2,1.2,.3,1)}
+@keyframes pop{from{transform:scale(.3) rotate(12deg);opacity:0}to{transform:rotate(-2.5deg);opacity:1}}
+.polaroid img{display:block;width:100%;max-height:60vh;object-fit:cover;background:#cbb98f;min-height:160px}
+.polaroid .cap{font-family:'Pinyon Script',cursive;font-size:30px;text-align:center;color:var(--wine);margin-top:10px}
+.x{position:absolute;top:calc(16px + env(safe-area-inset-top,0px));right:18px;font-size:34px;color:#f0dcae;background:none;border:none;cursor:pointer}
+.cover h1{background:linear-gradient(100deg,#c99d4b 30%,#fff3cf 50%,#c99d4b 70%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;animation:shine 4s linear infinite;filter:drop-shadow(0 2px 0 rgba(0,0,0,.5))}
+@keyframes shine{to{background-position:-250% 0}}
+.rose{animation:breathe 3s ease-in-out infinite}
+@keyframes breathe{50%{transform:scale(1.18) rotate(7deg)}}
+.cover .btn{animation:pulse 2.2s infinite}
+@keyframes pulse{50%{box-shadow:0 0 26px rgba(230,196,123,.85)}}
+.glow{position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 45%,rgba(255,190,90,.16),transparent 55%);animation:flick 3.5s ease-in-out infinite}
+@keyframes flick{50%{opacity:.5}}
+.inner>*,.inner li{animation:ink .9s backwards}
+@keyframes ink{from{opacity:0;filter:blur(6px);transform:translateY(10px)}}
+.w{color:var(--wine);border-bottom:1px dotted var(--wine);cursor:pointer;font-weight:600;transition:background .2s}
+.w:hover{background:rgba(201,157,75,.3)}
+li[data-n]{cursor:pointer;transition:transform .25s,color .25s}
+li[data-n]:hover{color:var(--wine);transform:translateX(5px)}
+#note{position:absolute;left:50%;bottom:62px;transform:translate(-50%,12px);z-index:6;max-width:86%;background:#2a1d18;color:#f1dfb4;font-family:'Pinyon Script',cursive;font-size:26px;padding:8px 20px;border-radius:14px;border:1px solid var(--gold);opacity:0;transition:.4s;text-align:center;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+#note.show{opacity:1;transform:translate(-50%,0)}
+.ribbon{position:absolute;top:0;right:44px;width:24px;height:76px;background:linear-gradient(#9a2f40,#5e1722);clip-path:polygon(0 0,100% 0,100% 100%,50% 80%,0 100%);z-index:2;animation:sway 4s ease-in-out infinite;transform-origin:top}
+@keyframes sway{50%{transform:rotate(3deg)}}
+.fl{position:fixed;z-index:40;pointer-events:none;font-family:'Pinyon Script',cursive;font-size:28px;color:#f6dfa2;text-shadow:0 2px 6px #000;transform:translate(-50%,-50%);animation:rise 1.8s ease-out forwards}
+@keyframes rise{to{transform:translate(-50%,-150px);opacity:0}}
+.photoBtn{animation:pulse 2.2s infinite}
+@media (prefers-reduced-motion:reduce){.cover{transition-duration:.01s}.page.in,.page.out,.polaroid{animation-duration:.01s}}
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<canvas id="leaves" aria-hidden="true"></canvas>
+<button id="mute" aria-label="Pausar o reanudar la música">♪</button>
+
+<div class="stage">
+ <div class="book" id="book">
+  <div class="pagewrap" id="pagewrap">
+   <div class="page" id="page">
+    <div class="frame"></div><div class="ribbon"></div><div id="note"></div>
+    <div class="inner" id="inner"></div>
+    <button class="nav" id="prev" aria-label="Página anterior">‹</button>
+    <div class="pno" id="pno"></div>
+    <button class="nav" id="next" aria-label="Página siguiente">›</button>
+   </div>
+  </div>
+  <div class="cover" id="cover">
+   <div class="spine"></div>
+   <div class="rose">❦</div>
+   <small>Una Historia Escrita de Nosotros</small>
+   <h1>A<br>F</h1>
+   <small>Con Todo el Amor</small>
+   <button class="btn" id="openBtn">Abrir</button>
+  </div>
+ </div>
+</div>
+
+<div class="modal" id="modal">
+ <button class="x" id="closeM" aria-label="Cerrar">×</button>
+ <div class="polaroid">
+  <img src="her.jpg" alt="Nosotros" onerror="this.alt='Pon her.jpg junto a este archivo'">
+  <div class="cap">Tú y yo, para siempre</div>
+ </div>
+</div>
+
+<audio id="song" src="books.mp3" loop preload="auto"></audio>
+
+<script>
+const pages=[
+`<h2>Prólogo</h2><div class="orn">✦ ✦ ✦</div>
+<p class="first">Amorchito lindo, mi noviecita hermosa: 11:11, y como siempre mi deseo no se piensa ni un segundo, porque es el mismo de todos los días: <span class="w" data-n="Siempre tú, mi amor">tú</span>.</p>
+<p>Que estés bien, que estés tranquila, que estés feliz y que estés conmigo. A veces las palabras se quedan chiquitas para lo que siento, pero quiero decírtelo todo, porque mereces leerlo las veces que quieras.</p>
+<div class="sub" style="font-size:15px;margin-top:6px">toca las palabras subrayadas, las hojas y la página ♡</div>`,
+
+`<h2>Capítulo I</h2><div class="sub">Lo que eres para mí</div><div class="orn">❦</div>
+<p class="first">Eres mi felicidad, mi calma, <span class="w" data-n="Contigo siempre estoy en casa">mi hogar</span>, mi lugar favorito en todo el mundo. Eres lo primero que quiero ver cuando algo sale bien y lo primero que busco cuando algo sale mal.</p>
+<p>Mi princesita linda, mi sonrisita brillante, mi corazoncito que tanto adoro: desde que estás en mi vida todo se siente más bonito, más ligero.</p>`,
+
+`<h2>Capítulo II</h2><div class="sub">Todo lo que amo de ti</div><div class="orn">❦</div>
+<ul>
+<li>Tu sonrisita brillante y linda</li>
+<li>Tus ojitos, tan lindos y magníficos</li>
+<li>Tu inteligencia, única como tú</li>
+<li>Tu corazón, que tanto siente y tanto piensa</li>
+<li>Tu ternura y tu cariño</li>
+<li>Tu manera de preocuparte por mí</li>
+<li>Tu risa y tus detalles</li>
+<li>Tu forma de hacerme sentir en casa</li>
+<li>Cada cosita que te hace ser tú</li>
+</ul>`,
+
+`<h2>Capítulo III</h2><div class="sub">Todo tiene tu nombre</div><div class="orn">❦</div>
+<p class="first">Cada esfuerzo, cada paso, cada meta, cada día de trabajo y de estudio: todo lo hago por ti, porque quiero y <span class="w" data-n="Todo lo hago con gusto, por ti">porque me nace</span>.</p>
+<p>Quiero construir una vida donde te sientas segura, amada y feliz. Eres la mujer que quiero en toda mi vida, y lo digo con una certeza que no me da miedo decir en voz alta. Tus logros también son míos, y no hay nada que me haga más feliz que verte brillar.</p>`,
+
+`<h2>Capítulo IV</h2><div class="sub">En todos los momentos</div><div class="orn">❦</div>
+<p class="first">Te quiero en la mañana, cuando apenas despierto y mi primer pensamiento <span class="w" data-n="Desde que abro los ojos">eres tú</span>. En la tarde, cuando tu sonrisa se me cruza por la mente en medio de cualquier cosa. En la noche, cuando todo se calma y solo quiero estar contigo.</p>
+<p>Te quiero cuando estás cerquita y cuando estás lejos, cuando me miras y cuando ni siquiera lo sabes.</p>`,
+
+`<h2>Capítulo V</h2><div class="sub">Cada día un poquito más</div><div class="orn">❦</div>
+<p class="first">Pensé que ya no podía quererte más, y al día siguiente descubro que sí, que mi corazón todavía tenía espacio para <span class="w" data-n="Y todavía me cabe más">más de ti</span>.</p>
+<p>Cada día encuentro algo nuevo que me enamora, y me emociona saber que me quedan muchísimos días para seguir descubriéndote y amándote más. Gracias por ser tú, por quererme como me quieres y por hacerme sentir el más afortunado del mundo.</p>`,
+
+`<h2>Epílogo</h2><div class="orn">✦ ✦ ✦</div>
+<p class="first">Te quiero, te adoro y te amo con todo mi corazón, por todo lo que eres y por cada cosa que te hace ser tú. Pase lo que pase, <span class="w" data-n="Siempre, siempre, siempre">te voy a querer siempre</span>. Mi amor por ti no se cansa, no se acaba y no cambia, solo crece.</p>
+<div class="sign">Tu Latoso, Fer</div>
+<button class="btn photoBtn" id="photoBtn">Nuestra foto</button>`
+];
+let i=0,busy=false;
+const $=id=>document.getElementById(id),page=$('page'),inner=$('inner'),song=$('song');
+const liN=['Esa sonrisa me arregla el día','Me pierdo en ellos','Eres brillante','Siento tu corazón desde aquí','Tu cariño es mi lugar seguro','Me encanta que me cuides','Tu risa es mi canción favorita','Contigo estoy en casa','Todo de ti, todo'];
+function render(){inner.innerHTML=pages[i];inner.scrollTop=0;
+ $('pno').innerHTML=pages.map((_,k)=>`<button class="dot${k===i?' on':''}" data-k="${k}" aria-label="Página ${k+1}"></button>`).join('');
+ if(i===2)inner.querySelectorAll('li').forEach((l,k)=>l.dataset.n=liN[k]);
+ let d=0;inner.querySelectorAll(':scope>*, li').forEach(e=>{e.style.animationDelay=(d++*.14)+'s'});
+ $('prev').disabled=i===0;$('next').disabled=i===pages.length-1;
+ const pb=$('photoBtn');if(pb)pb.onclick=()=>{$('modal').classList.add('show');rain()};}
+function to(n){if(busy||n<0||n>=pages.length||n===i)return;busy=true;
+ const r=page.getBoundingClientRect();burst(r.left+24,r.top+r.height/2,10);
+ page.classList.remove('in');page.classList.add('out');
+ setTimeout(()=>{i=n;render();page.classList.remove('out');page.classList.add('in');
+  setTimeout(()=>{page.classList.remove('in');busy=false},620)},550);}
+function go(d){to(i+d)}
+let nt;function showNote(t){const n=$('note');n.textContent=t;n.classList.add('show');clearTimeout(nt);nt=setTimeout(()=>n.classList.remove('show'),2800)}
+const ph=['te quiero','mi amor','mi todo','te adoro','mi niña linda','te amo','siempre tú','mi princesita'];
+function fl(x,y,t){const e=document.createElement('span');e.className='fl';e.textContent=t;e.style.left=x+'px';e.style.top=y+'px';document.body.appendChild(e);setTimeout(()=>e.remove(),1800)}
+inner.addEventListener('click',e=>{const t=e.target.closest('[data-n]');if(!t)return;showNote(t.dataset.n);const r=t.getBoundingClientRect();burst(r.left+r.width/2,r.top,12)});
+$('pno').onclick=e=>{const k=e.target.dataset.k;if(k!==undefined)to(+k)};
+document.addEventListener('pointerdown',e=>{if(!$('book').classList.contains('opened')||e.target.closest('button,.w,li,.modal'))return;burst(e.clientX,e.clientY,14);fl(e.clientX,e.clientY,ph[Math.random()*ph.length|0])});
+addEventListener('mousemove',e=>{$('book').style.transform=`rotateY(${(e.clientX/innerWidth-.5)*7}deg) rotateX(${-(e.clientY/innerHeight-.5)*5}deg)`});
+document.querySelector('.polaroid').onclick=e=>{burst(e.clientX,e.clientY,22,1);fl(e.clientX,e.clientY,'te amo')};
+$('next').onclick=()=>go(1);$('prev').onclick=()=>go(-1);
+addEventListener('keydown',e=>{if(e.key==='ArrowRight')go(1);if(e.key==='ArrowLeft')go(-1);if(e.key==='Escape')$('modal').classList.remove('show')});
+let sx=null;page.addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
+page.addEventListener('touchend',e=>{if(sx===null)return;const d=e.changedTouches[0].clientX-sx;if(Math.abs(d)>60)go(d<0?1:-1);sx=null});
+$('openBtn').onclick=()=>{song.volume=.7;song.play().catch(()=>{});$('mute').style.display='block';
+ $('cover').classList.add('open');$('book').classList.add('opened');startLeaves(1);};
+$('mute').onclick=()=>{if(song.paused){song.play();$('mute').style.opacity=1}else{song.pause();$('mute').style.opacity=.5}};
+$('closeM').onclick=()=>$('modal').classList.remove('show');
+$('modal').onclick=e=>{if(e.target.id==='modal')$('modal').classList.remove('show')};
+render();
+
+/* hojas cayendo */
+const cv=$('leaves'),cx=cv.getContext('2d');let W,H,L=[],run=false;
+const cols=['#a8431f','#c9772a','#d9a441','#8a2b2b','#6e1f2c','#7d7a3a','#58663f'];
+function size(){W=cv.width=innerWidth;H=cv.height=innerHeight}addEventListener('resize',size);size();
+function mk(top){return{x:Math.random()*W,y:top?-30:Math.random()*H,s:9+Math.random()*16,vy:.5+Math.random()*1.1,sw:Math.random()*Math.PI*2,sa:.4+Math.random()*1,r:Math.random()*6.28,vr:(Math.random()-.5)*.03,c:cols[Math.random()*cols.length|0],a:.55+Math.random()*.4}}
+function leaf(l){cx.save();cx.translate(l.x,l.y);cx.rotate(l.r);cx.scale(1,.55+.45*Math.abs(Math.cos(l.sw)));cx.globalAlpha=l.a;cx.fillStyle=l.c;
+ cx.beginPath();cx.moveTo(0,-l.s);cx.bezierCurveTo(l.s*.9,-l.s*.5,l.s*.7,l.s*.6,0,l.s);cx.bezierCurveTo(-l.s*.7,l.s*.6,-l.s*.9,-l.s*.5,0,-l.s);cx.fill();
+ cx.strokeStyle='rgba(40,20,10,.45)';cx.lineWidth=1;cx.beginPath();cx.moveTo(0,-l.s);cx.lineTo(0,l.s*1.15);cx.stroke();cx.restore()}
+const M=[],B=[];
+function burst(x,y,n=12,big){for(let k=0;k<n;k++){const a=Math.random()*6.28,v=2+Math.random()*(big?7:4);B.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-2,s:6+Math.random()*9,sw:Math.random()*6,r:Math.random()*6,vr:(Math.random()-.5)*.2,c:Math.random()<.35?'#e6c47b':cols[Math.random()*cols.length|0],a:1})}}
+function rain(){for(let k=0;k<55;k++){const l=mk(true);l.y=-Math.random()*H*.7;l.vx=(Math.random()-.5)*2;l.vy=2+Math.random()*3;l.a=.95;l.fall=1;B.push(l)}}
+function startLeaves(){if(run)return;run=true;const n=matchMedia('(prefers-reduced-motion:reduce)').matches?8:(W<600?22:38);
+ for(let k=0;k<n;k++)L.push(mk(false));
+ for(let k=0;k<28;k++)M.push({x:Math.random()*W,y:Math.random()*H,r:.8+Math.random()*1.8,p:Math.random()*6.28,v:.15+Math.random()*.35});
+ (function t(){cx.clearRect(0,0,W,H);
+  for(const m of M){m.p+=.03;m.y-=m.v;m.x+=Math.sin(m.p)*.3;if(m.y<-5){m.y=H+5;m.x=Math.random()*W}cx.globalAlpha=.4+.4*Math.sin(m.p);cx.fillStyle='#ffd98a';cx.beginPath();cx.arc(m.x,m.y,m.r,0,6.28);cx.fill()}
+  for(const l of L){l.sw+=.02;l.x+=Math.sin(l.sw)*l.sa+.3;l.y+=l.vy;l.r+=l.vr;if(l.y>H+30||l.x>W+30){Object.assign(l,mk(true))}leaf(l)}
+  for(let k=B.length-1;k>=0;k--){const b=B[k];b.x+=b.vx;b.y+=b.vy;b.r+=b.vr;b.sw+=.05;
+   if(b.fall){if(b.y>H+30)B.splice(k,1)}else{b.vy+=.18;b.vx*=.985;b.a-=.014;if(b.a<=0){B.splice(k,1);continue}}
+   leaf(b)}
+  requestAnimationFrame(t)})()}
+startLeaves();
+</script>
+</body>
+</html>
